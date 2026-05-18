@@ -259,6 +259,11 @@ function setResendVisible(email) {
   if (row) row.hidden = !pendingConfirmationEmail;
 }
 
+/** Vollständige Auth-Fehler in die Konsole (F12), für Supabase-Diagnose */
+function logAuthErr(phase, err) {
+  console.error("[ROOTS TIME Auth]", phase, err?.message, err?.code || "", err?.status || "", err);
+}
+
 /** Deutsche Kurztexte für typische Supabase-Auth-Fehler */
 function formatAuthError(err) {
   if (!err || typeof err.message !== "string") return "Anmeldung fehlgeschlagen.";
@@ -277,6 +282,21 @@ function formatAuthError(err) {
   }
   if (/Password should be at least|Password is too weak|weak password/i.test(m)) {
     return "Passwort erfüllt die Anforderungen nicht (mindestens 8 Zeichen, ggf. stärker wählen).";
+  }
+  if (/signups not allowed|signup.*not.*allowed|Signups not allowed/i.test(m)) {
+    return "Registrierung ist im Supabase-Projekt deaktiviert. Dashboard → Authentication → Providers → E-Mail → „Allow new users to sign up“ aktivieren.";
+  }
+  if (/signup.*disabled|email signup.*disabled|Email provider is disabled/i.test(m)) {
+    return "E-Mail-Registrierung ist im Supabase-Projekt ausgeschaltet (Provider / E-Mail).";
+  }
+  if (/Nur firmeninterne E-Mail-Adressen/i.test(m)) {
+    return m;
+  }
+  if (/Database error saving new user|unexpected_failure/i.test(m)) {
+    return "Datenbankfehler beim Anlegen des Kontos (häufig: Trigger nach Registrierung). Bitte Supabase → Logs → Postgres prüfen oder Administrator informieren.";
+  }
+  if (/Error sending confirmation|confirmation email could not|535|SMTP|authentication failed/i.test(m)) {
+    return "Die Bestätigungs-E-Mail konnte nicht versendet werden. Supabase → Project Settings → Authentication: E-Mail-Versand / SMTP prüfen.";
   }
   return m;
 }
@@ -309,6 +329,7 @@ async function handleResendConfirmation() {
       options: { emailRedirectTo: getAuthRedirectUrl() },
     });
     if (error) {
+      logAuthErr("resendConfirmation", error);
       showAuthFeedback(formatAuthError(error), "error");
     } else {
       showAuthFeedback(
@@ -354,6 +375,7 @@ async function handleSignIn(e) {
   try {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password: pw });
     if (error) {
+      logAuthErr("signIn", error);
       const msg = formatAuthError(error);
       showAuthFeedback(msg, "error");
       const raw = error.message || "";
@@ -423,6 +445,7 @@ async function handleSignUp(e) {
       },
     });
     if (error) {
+      logAuthErr("signUp", error);
       showAuthFeedback(formatAuthError(error), "error");
       return;
     }
@@ -526,9 +549,11 @@ async function boot() {
   wireAuthForms();
   if (!supabase) {
     setSyncUi(false);
+    console.error("[ROOTS TIME] Kein Supabase-Client: Prüfen Sie config.js (SUPABASE_URL / ANON_KEY).");
     toast("Supabase nicht konfiguriert", "error");
     return;
   }
+  console.info("[ROOTS TIME] Supabase-Client:", SUPABASE_URL);
   const {
     data: { session },
   } = await supabase.auth.getSession();
