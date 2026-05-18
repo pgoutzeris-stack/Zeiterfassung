@@ -1256,10 +1256,11 @@ input, select, textarea { font-family: inherit; }
   inset: 0;
   z-index: 5000;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   background: linear-gradient(145deg, #eff6ff 0%, #f4f7fb 45%, #ffffff 100%);
   padding: 24px;
+  overflow-y: auto;
 }
 .auth-card {
   background: var(--bg);
@@ -1269,6 +1270,7 @@ input, select, textarea { font-family: inherit; }
   width: 100%;
   max-width: 440px;
   border: 1px solid var(--line);
+  margin: auto;
 }
 .auth-card h1 {
   font-size: 22px;
@@ -1352,11 +1354,35 @@ input, select, textarea { font-family: inherit; }
   margin-top: 14px;
   font-size: 13px;
   line-height: 1.5;
-  min-height: 1.2em;
+  min-height: 0;
+  border-radius: 8px;
+  padding: 0;
+  display: block;
 }
-.auth-feedback--error { color: var(--danger); }
-.auth-feedback--success { color: #0d9488; font-weight: 500; }
-.auth-feedback--info { color: var(--muted); }
+.auth-feedback:empty { display: none; }
+.auth-feedback--error {
+  color: var(--danger);
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  border-left: 4px solid var(--danger);
+  padding: 10px 14px;
+  font-weight: 500;
+}
+.auth-feedback--success {
+  color: #065f46;
+  background: #ecfdf5;
+  border: 1px solid #6ee7b7;
+  border-left: 4px solid #10b981;
+  padding: 10px 14px;
+  font-weight: 500;
+}
+.auth-feedback--info {
+  color: #1e40af;
+  background: #eff6ff;
+  border: 1px solid #93c5fd;
+  border-left: 4px solid var(--brand);
+  padding: 10px 14px;
+}
 .auth-resend {
   margin-top: 10px;
   text-align: center;
@@ -1381,27 +1407,26 @@ input, select, textarea { font-family: inherit; }
 
 .app-version-badge {
   position: fixed;
-  top: 12px;
-  right: 16px;
-  z-index: 6000;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--muted);
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid var(--line);
-  padding: 5px 11px;
+  top: 14px;
+  right: 18px;
+  z-index: 9999;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--brand);
+  padding: 4px 12px;
   border-radius: var(--radius-pill);
   font-variant-numeric: tabular-nums;
   pointer-events: none;
   user-select: none;
-  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 2px 8px rgba(32, 110, 251, 0.35);
+  letter-spacing: 0.02em;
 }
 
 </style>
 </head>
 <body>
-<div id="appVersionBadge" class="app-version-badge" title="Ausgelieferte App-Version (bei Deploy in _engine_head.js erhöhen)"></div>
+<div id="appVersionBadge" class="app-version-badge">v1</div>
 <div id="authGate" class="auth-gate">
   <div class="auth-card">
     <h1>ROOTS <span style="color:var(--brand)">TIME</span></h1>
