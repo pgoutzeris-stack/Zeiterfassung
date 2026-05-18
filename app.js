@@ -449,6 +449,16 @@ async function handleSignUp(e) {
       showAuthFeedback(formatAuthError(error), "error");
       return;
     }
+    if (!data.user) {
+      console.error("[ROOTS TIME Auth] signUp OK but no data.user", data);
+      showAuthFeedback(
+        "Die Registrierung wurde nicht abgeschlossen (kein Benutzerkonto angelegt). " +
+          "Bitte im Browser die Konsole öffnen (F12 → Konsole) und in Supabase unter Authentication prüfen, ob neue Nutzer erlaubt sind. " +
+          "Häufig: Datenbank-Trigger beim Anlegen/Falsche E-Mail-Domain.",
+        "error"
+      );
+      return;
+    }
     if (data.session?.user) {
       showAuthFeedback("");
       await onSession(data.session.user);
