@@ -1,6 +1,6 @@
 // ENGINE HEAD (in app.js zusammengefügt)
 /** Erhöhen bei jedem GitHub-Pages-Deploy, um die ausgelieferte Version zu erkennen */
-const APP_DISPLAY_VERSION = "2";
+const APP_DISPLAY_VERSION = "3";
 
 const ALLOWED_EMAIL_DOMAIN = "roots-consultants.com";
 const WORKSPACE_ID = "a0000000-0000-4000-8000-000000000001";
