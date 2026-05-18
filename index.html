@@ -1343,6 +1343,37 @@ input, select, textarea { font-family: inherit; }
 }
 #error-text { margin-top: 12px; color: var(--danger); font-size: 13px; min-height: 1.2em; }
 
+.auth-feedback {
+  margin-top: 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  min-height: 1.2em;
+}
+.auth-feedback--error { color: var(--danger); }
+.auth-feedback--success { color: #0d9488; font-weight: 500; }
+.auth-feedback--info { color: var(--muted); }
+.auth-resend {
+  margin-top: 10px;
+  text-align: center;
+}
+.auth-resend[hidden] { display: none !important; }
+.btn-auth-resend {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--brand);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.btn-auth-resend:hover { color: var(--brand-dark); }
+.btn-auth-resend:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 </style>
 </head>
 <body>
@@ -1376,7 +1407,10 @@ input, select, textarea { font-family: inherit; }
         <button type="submit" class="btn-primary" style="width:100%; justify-content:center; margin-top:8px;">Konto anlegen</button>
       </form>
     </div>
-    <p id="authError" style="margin-top:14px;color:var(--danger);font-size:13px;min-height:1.2em;"></p>
+    <div id="authFeedback" class="auth-feedback" role="status" aria-live="polite"></div>
+    <div id="authResendRow" class="auth-resend" hidden>
+      <button type="button" id="authResendBtn" class="btn-auth-resend">Bestätigungs-E-Mail erneut senden</button>
+    </div>
   </div>
 </div>
 

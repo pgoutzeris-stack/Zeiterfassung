@@ -237,9 +237,26 @@ function showAuthGate(show) {
   if (app) app.style.display = show ? "none" : "";
 }
 
-function showAuthError(msg) {
-  const el = document.getElementById("authError");
-  if (el) el.textContent = msg || "";
+/** Redirect nach E-Mail-Link (Supabase Dashboard: „Redirect URLs“ muss diese URL erlauben) */
+function getAuthRedirectUrl() {
+  if (typeof window === "undefined") return "";
+  const { origin, pathname, search } = window.location;
+  return `${origin}${pathname}${search}`;
+}
+
+let pendingConfirmationEmail = null;
+
+function showAuthFeedback(message, kind = "") {
+  const el = document.getElementById("authFeedback");
+  if (!el) return;
+  el.textContent = message || "";
+  el.className = "auth-feedback" + (kind ? ` auth-feedback--${kind}` : "");
+}
+
+function setResendVisible(email) {
+  pendingConfirmationEmail = (email && String(email).trim()) || null;
+  const row = document.getElementById("authResendRow");
+  if (row) row.hidden = !pendingConfirmationEmail;
 }
 
 /** Deutsche Kurztexte für typische Supabase-Auth-Fehler */
@@ -250,7 +267,7 @@ function formatAuthError(err) {
     return "E-Mail oder Passwort ist falsch.";
   }
   if (/Email not confirmed|not confirmed|email address is not confirmed/i.test(m)) {
-    return "E-Mail noch nicht bestätigt. Bitte den Link in der Bestätigungs-E-Mail öffnen, danach erneut anmelden.";
+    return "Diese E-Mail ist noch nicht bestätigt. Bitte zuerst den Link in der Bestätigungs-E-Mail öffnen (Posteingang & Spam prüfen). Danach können Sie sich hier anmelden.";
   }
   if (/Email rate limit|too many requests|rate limit|over_email_send_rate_limit/i.test(m)) {
     return "Zu viele Versuche. Bitte kurz warten und erneut versuchen.";
@@ -258,20 +275,73 @@ function formatAuthError(err) {
   if (/User already registered|already been registered|already exists/i.test(m)) {
     return "Diese E-Mail ist bereits registriert. Bitte beim Tab „Anmelden“ einloggen.";
   }
+  if (/Password should be at least|Password is too weak|weak password/i.test(m)) {
+    return "Passwort erfüllt die Anforderungen nicht (mindestens 8 Zeichen, ggf. stärker wählen).";
+  }
   return m;
+}
+
+async function handleResendConfirmation() {
+  if (!supabase) return;
+  const email =
+    pendingConfirmationEmail ||
+    document.getElementById("authEmail")?.value?.trim() ||
+    document.getElementById("regEmail")?.value?.trim() ||
+    "";
+  if (!email) {
+    showAuthFeedback("Bitte zuerst Ihre E-Mail-Adresse eintragen.", "error");
+    return;
+  }
+  if (!isAllowedEmail(email)) {
+    showAuthFeedback("Nur E-Mail-Adressen @" + ALLOWED_EMAIL_DOMAIN + " sind erlaubt.", "error");
+    return;
+  }
+  const btn = document.getElementById("authResendBtn");
+  if (btn) {
+    btn.disabled = true;
+    btn.dataset.prev = btn.textContent;
+    btn.textContent = "Wird gesendet…";
+  }
+  try {
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email,
+      options: { emailRedirectTo: getAuthRedirectUrl() },
+    });
+    if (error) {
+      showAuthFeedback(formatAuthError(error), "error");
+    } else {
+      showAuthFeedback(
+        "Sofern die Adresse noch nicht bestätigt ist, haben wir eine neue E-Mail an " + email + " geschickt. Posteingang und Spam prüfen.",
+        "success"
+      );
+    }
+  } catch (e) {
+    console.error(e);
+    showAuthFeedback(e?.message || "E-Mail konnte nicht gesendet werden.", "error");
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      if (btn.dataset.prev) {
+        btn.textContent = btn.dataset.prev;
+        delete btn.dataset.prev;
+      }
+    }
+  }
 }
 
 async function handleSignIn(e) {
   e.preventDefault();
-  showAuthError("");
+  showAuthFeedback("");
+  setResendVisible(null);
   if (!supabase) {
-    showAuthError("Supabase ist nicht konfiguriert (config.js).");
+    showAuthFeedback("Supabase ist nicht konfiguriert (config.js).", "error");
     return;
   }
   const email = document.getElementById("authEmail").value.trim();
   const pw = document.getElementById("authPassword").value;
   if (!isAllowedEmail(email)) {
-    showAuthError("Nur E-Mail-Adressen @" + ALLOWED_EMAIL_DOMAIN + " sind erlaubt.");
+    showAuthFeedback("Nur E-Mail-Adressen @" + ALLOWED_EMAIL_DOMAIN + " sind erlaubt.", "error");
     return;
   }
   const form = e.target;
@@ -284,20 +354,27 @@ async function handleSignIn(e) {
   try {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password: pw });
     if (error) {
-      showAuthError(formatAuthError(error));
+      const msg = formatAuthError(error);
+      showAuthFeedback(msg, "error");
+      const raw = error.message || "";
+      if (/Email not confirmed|not confirmed|email address is not confirmed/i.test(raw)) {
+        setResendVisible(email);
+      }
       return;
     }
     const session = data.session ?? (await supabase.auth.getSession()).data?.session;
     if (!session?.user) {
-      showAuthError(
-        "Keine aktive Sitzung. Bei aktivierter E-Mail-Bestätigung: zuerst den Link in der E-Mail öffnen, dann hier anmelden."
+      showAuthFeedback(
+        "Keine aktive Sitzung. Wenn Ihr Projekt E-Mail-Bestätigung vorschreibt: zuerst den Link in der E-Mail öffnen, dann hier anmelden.",
+        "info"
       );
+      setResendVisible(email);
       return;
     }
     await onSession(session.user);
   } catch (err) {
     console.error(err);
-    showAuthError(err?.message || "Unerwarteter Fehler bei der Anmeldung.");
+    showAuthFeedback(err?.message || "Unerwarteter Fehler bei der Anmeldung.", "error");
   } finally {
     if (submitBtn) {
       submitBtn.disabled = false;
@@ -311,36 +388,73 @@ async function handleSignIn(e) {
 
 async function handleSignUp(e) {
   e.preventDefault();
-  showAuthError("");
+  showAuthFeedback("");
+  setResendVisible(null);
   if (!supabase) {
-    showAuthError("Supabase ist nicht konfiguriert (config.js).");
+    showAuthFeedback("Supabase ist nicht konfiguriert (config.js).", "error");
     return;
   }
   const email = document.getElementById("regEmail").value.trim();
   const pw = document.getElementById("regPassword").value;
   const name = document.getElementById("regName").value.trim();
   if (!isAllowedEmail(email)) {
-    showAuthError("Nur E-Mail-Adressen @" + ALLOWED_EMAIL_DOMAIN + " sind erlaubt.");
+    showAuthFeedback("Nur E-Mail-Adressen @" + ALLOWED_EMAIL_DOMAIN + " sind erlaubt.", "error");
     return;
   }
   if (pw.length < 8) {
-    showAuthError("Passwort mindestens 8 Zeichen.");
+    showAuthFeedback("Passwort mindestens 8 Zeichen.", "error");
     return;
   }
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password: pw,
-    options: { data: { full_name: name } },
-  });
-  if (error) showAuthError(formatAuthError(error));
-  else {
-    showAuthError("");
+  const form = e.target;
+  const submitBtn = form?.querySelector?.('button[type="submit"]');
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.dataset.prevLabel = submitBtn.textContent;
+    submitBtn.textContent = "Bitte warten…";
+  }
+  try {
+    const redirectTo = getAuthRedirectUrl();
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password: pw,
+      options: {
+        emailRedirectTo: redirectTo,
+        data: { full_name: name },
+      },
+    });
+    if (error) {
+      showAuthFeedback(formatAuthError(error), "error");
+      return;
+    }
     if (data.session?.user) {
+      showAuthFeedback("");
       await onSession(data.session.user);
-    } else {
-      alert(
-        "Registrierung OK. Falls E-Mail-Bestätigung in Supabase aktiv ist: Link im Postfach öffnen, danach anmelden."
-      );
+      return;
+    }
+    const loginEmail = document.getElementById("authEmail");
+    if (loginEmail) loginEmail.value = email;
+    const loginRadio = document.getElementById("auth-tab-login");
+    const registerRadio = document.getElementById("auth-tab-register");
+    if (loginRadio) loginRadio.checked = true;
+    if (registerRadio) registerRadio.checked = false;
+
+    showAuthFeedback(
+      "Wir haben eine Bestätigungs-E-Mail an " +
+        email +
+        " gesendet. Bitte den Link in der Mail öffnen (auch Spam prüfen). Erst danach ist die Anmeldung hier möglich – Daten werden danach live mit Supabase synchronisiert.",
+      "success"
+    );
+    setResendVisible(email);
+  } catch (err) {
+    console.error(err);
+    showAuthFeedback(err?.message || "Registrierung fehlgeschlagen.", "error");
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      if (submitBtn.dataset.prevLabel) {
+        submitBtn.textContent = submitBtn.dataset.prevLabel;
+        delete submitBtn.dataset.prevLabel;
+      }
     }
   }
 }
@@ -354,6 +468,7 @@ function wireAuthForms() {
   document.getElementById("formLogin")?.addEventListener("submit", handleSignIn);
   document.getElementById("formRegister")?.addEventListener("submit", handleSignUp);
   document.getElementById("btnLogout")?.addEventListener("click", () => void handleSignOut());
+  document.getElementById("authResendBtn")?.addEventListener("click", () => void handleResendConfirmation());
 }
 
 async function onSession(user) {
@@ -367,6 +482,8 @@ async function onSession(user) {
     }
     return;
   }
+  showAuthFeedback("");
+  setResendVisible(null);
   showAuthGate(false);
   setSyncUi(true);
   try {
