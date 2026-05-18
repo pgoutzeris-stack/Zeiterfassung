@@ -470,25 +470,24 @@ async function handleSignUp(e) {
       );
       return;
     }
+    // Auto-Confirm aktiv: Supabase gibt direkt eine Session zurück → sofort einloggen
     if (data.session?.user) {
       showAuthFeedback("");
       await onSession(data.session.user);
       return;
     }
+    // Fallback falls E-Mail-Bestätigung im Dashboard noch aktiv ist
     const loginEmail = document.getElementById("authEmail");
     if (loginEmail) loginEmail.value = email;
     const loginRadio = document.getElementById("auth-tab-login");
     const registerRadio = document.getElementById("auth-tab-register");
     if (loginRadio) loginRadio.checked = true;
     if (registerRadio) registerRadio.checked = false;
-
     showAuthFeedback(
-      "Wir haben eine Bestätigungs-E-Mail an " +
-        email +
-        " gesendet. Bitte den Link in der Mail öffnen (auch Spam prüfen). Erst danach ist die Anmeldung hier möglich – Daten werden danach live mit Supabase synchronisiert.",
+      "Konto angelegt! Bitte jetzt im Tab „Anmelden" einloggen.",
       "success"
     );
-    setResendVisible(email);
+    setResendVisible(null);
   } catch (err) {
     console.error(err);
     showAuthFeedback(err?.message || "Registrierung fehlgeschlagen.", "error");
