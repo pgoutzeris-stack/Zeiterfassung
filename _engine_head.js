@@ -1,4 +1,7 @@
 // ENGINE HEAD (in app.js zusammengefügt)
+/** Erhöhen bei jedem GitHub-Pages-Deploy, um die ausgelieferte Version zu erkennen */
+const APP_DISPLAY_VERSION = "1";
+
 const ALLOWED_EMAIL_DOMAIN = "roots-consultants.com";
 const WORKSPACE_ID = "a0000000-0000-4000-8000-000000000001";
 const TIMER_KEY = "roots_time_active_timer_v2";
@@ -554,7 +557,13 @@ function saveLocal() {
   _profSaveT = setTimeout(() => void flushProfileToDb(), 700);
 }
 
+function applyVersionBadge() {
+  const el = document.getElementById("appVersionBadge");
+  if (el) el.textContent = "v" + APP_DISPLAY_VERSION;
+}
+
 async function boot() {
+  applyVersionBadge();
   initSupabaseClient();
   wireAuthForms();
   if (!supabase) {

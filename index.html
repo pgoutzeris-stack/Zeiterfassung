@@ -1379,9 +1379,29 @@ input, select, textarea { font-family: inherit; }
   cursor: not-allowed;
 }
 
+.app-version-badge {
+  position: fixed;
+  top: 12px;
+  right: 16px;
+  z-index: 6000;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--line);
+  padding: 5px 11px;
+  border-radius: var(--radius-pill);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+  user-select: none;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06);
+}
+
 </style>
 </head>
 <body>
+<div id="appVersionBadge" class="app-version-badge" title="Ausgelieferte App-Version (bei Deploy in _engine_head.js erhöhen)"></div>
 <div id="authGate" class="auth-gate">
   <div class="auth-card">
     <h1>ROOTS <span style="color:var(--brand)">TIME</span></h1>
