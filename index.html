@@ -1281,7 +1281,15 @@ input, select, textarea { font-family: inherit; }
   gap: 8px;
   margin-bottom: 20px;
 }
-.auth-tabs button {
+.auth-tab-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  margin: 0;
+  pointer-events: none;
+}
+.auth-tab-btn {
   flex: 1;
   padding: 10px;
   border-radius: 10px;
@@ -1290,13 +1298,26 @@ input, select, textarea { font-family: inherit; }
   font-size: 13px;
   font-weight: 600;
   color: var(--muted);
+  text-align: center;
+  cursor: pointer;
+  display: block;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
-.auth-tabs button.is-active {
+#auth-tab-login:checked ~ .auth-tabs label[for="auth-tab-login"],
+#auth-tab-register:checked ~ .auth-tabs label[for="auth-tab-register"] {
   background: var(--brand-light);
   border-color: var(--brand);
   color: var(--brand-dark);
 }
-.auth-panel { display: none; }
+#panel-login,
+#panel-register {
+  display: none;
+}
+#auth-tab-login:checked ~ #panel-login,
+#auth-tab-register:checked ~ #panel-register {
+  display: block;
+}
 .auth-field { margin-bottom: 14px; }
 .auth-field label {
   display: block;
@@ -1329,11 +1350,13 @@ input, select, textarea { font-family: inherit; }
   <div class="auth-card">
     <h1>ROOTS <span style="color:var(--brand)">TIME</span></h1>
     <p class="sub">Anmeldung nur mit <strong>@roots-consultants.com</strong>. Daten werden live mit Supabase synchronisiert.</p>
+    <input type="radio" name="auth-tab" id="auth-tab-login" class="auth-tab-input" checked>
+    <input type="radio" name="auth-tab" id="auth-tab-register" class="auth-tab-input">
     <div class="auth-tabs">
-      <button type="button" data-auth-tab="login" class="is-active">Anmelden</button>
-      <button type="button" data-auth-tab="register">Registrieren</button>
+      <label for="auth-tab-login" class="auth-tab-btn">Anmelden</label>
+      <label for="auth-tab-register" class="auth-tab-btn">Registrieren</label>
     </div>
-    <div id="panel-login" class="auth-panel" style="display:block">
+    <div id="panel-login" class="auth-panel">
       <form id="formLogin">
         <div class="auth-field"><label>E-Mail</label>
           <input id="authEmail" type="email" autocomplete="username" required placeholder="name@roots-consultants.com"></div>

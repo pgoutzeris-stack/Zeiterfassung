@@ -245,6 +245,10 @@ function showAuthError(msg) {
 async function handleSignIn(e) {
   e.preventDefault();
   showAuthError("");
+  if (!supabase) {
+    showAuthError("Supabase ist nicht konfiguriert (config.js).");
+    return;
+  }
   const email = document.getElementById("authEmail").value.trim();
   const pw = document.getElementById("authPassword").value;
   if (!isAllowedEmail(email)) {
@@ -258,6 +262,10 @@ async function handleSignIn(e) {
 async function handleSignUp(e) {
   e.preventDefault();
   showAuthError("");
+  if (!supabase) {
+    showAuthError("Supabase ist nicht konfiguriert (config.js).");
+    return;
+  }
   const email = document.getElementById("regEmail").value.trim();
   const pw = document.getElementById("regPassword").value;
   const name = document.getElementById("regName").value.trim();
@@ -282,6 +290,7 @@ async function handleSignUp(e) {
 }
 
 async function handleSignOut() {
+  if (!supabase) return;
   await supabase.auth.signOut();
 }
 
@@ -289,15 +298,6 @@ function wireAuthForms() {
   document.getElementById("formLogin")?.addEventListener("submit", handleSignIn);
   document.getElementById("formRegister")?.addEventListener("submit", handleSignUp);
   document.getElementById("btnLogout")?.addEventListener("click", () => void handleSignOut());
-  document.querySelectorAll("[data-auth-tab]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const tab = btn.getAttribute("data-auth-tab");
-      document.querySelectorAll(".auth-panel").forEach((p) => {
-        p.style.display = p.id === "panel-" + tab ? "block" : "none";
-      });
-      document.querySelectorAll("[data-auth-tab]").forEach((b) => b.classList.toggle("is-active", b === btn));
-    });
-  });
 }
 
 async function onSession(user) {
@@ -305,7 +305,7 @@ async function onSession(user) {
   if (!user) {
     showAuthGate(true);
     setSyncUi(false);
-    if (workspaceChannel) {
+    if (workspaceChannel && supabase) {
       supabase.removeChannel(workspaceChannel);
       workspaceChannel = null;
     }
@@ -350,12 +350,12 @@ function saveLocal() {
 
 async function boot() {
   initSupabaseClient();
+  wireAuthForms();
   if (!supabase) {
     setSyncUi(false);
     toast("Supabase nicht konfiguriert", "error");
     return;
   }
-  wireAuthForms();
   const {
     data: { session },
   } = await supabase.auth.getSession();
