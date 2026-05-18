@@ -58,7 +58,15 @@ function isAllowedEmail(email) {
 }
 
 function initSupabaseClient() {
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) return;
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    console.error("[ROOTS TIME] Supabase-URL oder Anon-Key fehlt – config.js prüfen.");
+    return;
+  }
+  if (typeof window.supabase === "undefined" || typeof window.supabase.createClient !== "function") {
+    throw new Error(
+      "supabase-js nicht geladen. CDN-Skript wurde blockiert oder ist noch nicht verfügbar."
+    );
+  }
   supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
   });
@@ -564,15 +572,29 @@ function applyVersionBadge() {
 
 async function boot() {
   applyVersionBadge();
-  initSupabaseClient();
-  wireAuthForms();
-  if (!supabase) {
+  wireAuthForms(); // immer zuerst verdrahten, damit Fehlermeldungen angezeigt werden können
+  try {
+    initSupabaseClient();
+  } catch (e) {
+    console.error("[ROOTS TIME] Supabase-Init fehlgeschlagen:", e.message);
+    showAuthFeedback(
+      "Supabase konnte nicht geladen werden (" + e.message + "). " +
+      "Bitte Seite neu laden oder Adblocker/Browsererweiterungen prüfen.",
+      "error"
+    );
     setSyncUi(false);
-    console.error("[ROOTS TIME] Kein Supabase-Client: Prüfen Sie config.js (SUPABASE_URL / ANON_KEY).");
-    toast("Supabase nicht konfiguriert", "error");
     return;
   }
-  console.info("[ROOTS TIME] Supabase-Client:", SUPABASE_URL);
+  if (!supabase) {
+    setSyncUi(false);
+    showAuthFeedback(
+      "Supabase nicht konfiguriert – config.js prüfen (SUPABASE_URL / ANON_KEY).",
+      "error"
+    );
+    console.error("[ROOTS TIME] Kein Supabase-Client.");
+    return;
+  }
+  console.info("[ROOTS TIME] Supabase-Client initialisiert:", SUPABASE_URL);
   const {
     data: { session },
   } = await supabase.auth.getSession();
