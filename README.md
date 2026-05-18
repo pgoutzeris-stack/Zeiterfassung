@@ -1,29 +1,36 @@
 # ROOTS TIME · Zeiterfassung
 
-Statische Single-Page-App (GitHub Pages) mit **Supabase**-Persistenz im Projekt **ROOTS_Intranet_DB**.
+Interne Zeiterfassung für **ROOTS Consultants** mit **Supabase Auth** (nur `@roots-consultants.com`) und **Echtzeit-Sync** (Postgres + Realtime).
 
-## Live-Demo
+**GitHub Pages:** https://pgoutzeris-stack.github.io/Zeiterfassung/
 
-Nach dem ersten Deploy: `https://pgoutzeris-stack.github.io/Zeiterfassung/`
+## Anmeldung
 
-## Supabase
+- **Registrierung** nur mit Firmen-Mail und Passwort (min. 8 Zeichen).
+- Wenn im Supabase-Projekt **E-Mail-Bestätigung** aktiv ist: Link im Postfach anklicken, danach anmelden.  
+  (Dashboard → Authentication → Providers → Email → „Confirm email” optional deaktivieren für interne Tests.)
 
-- Tabelle `public.roots_time_workspace`: eine Zeile `id = default`, Spalte `payload` (JSON) mit allen App-Daten.
-- Realtime auf dieser Tabelle für Tab-Sync.
-- **Hinweis Sicherheit:** Für das MVP ist RLS auf dieser Tabelle deaktiviert (analog zum Team-Kalender-Setup). Jeder mit **Anon-Key** und **URL** kann schreiben. Für produktiven Mehrbenutzerbetrieb: Edge Function + Service Role oder Supabase Auth + RLS.
+## Technik
 
-## Konfiguration
+- `index.html` – UI
+- `config.js` – öffentlicher Supabase-Anon-Key + URL
+- `app.js` – zusammengebaut aus `_engine_head.js`, gekürztem `_legacy_ui.js` und `_overrides.js` (`python3 build_app_js.py`)
 
-`config.js` enthält `SUPABASE_URL` und `SUPABASE_ANON_KEY` (öffentlicher Browser-Key).
+### Datenbank (ROOTS_Intranet_DB)
 
-## Lokal testen
+Tabellen: `workspaces`, `profiles`, `workspace_members`, `categories`, `projects`, `tasks`, `time_entries` – alle mit **RLS** (außer ältere Kalender-Tabellen).
+
+Neue Nutzer: Trigger `handle_new_user` prüft Domain und legt `profiles` + `workspace_members` für Workspace `ROOTS Consultants` an.
+
+### Sicherheit
+
+- Ohne gültige Session liefert Postgres keine Zeilen (RLS).
+- Die alte JSON-Tabelle `roots_time_workspace` wird nicht mehr genutzt.
+
+## Entwicklung
 
 ```bash
 cd Zeiterfassung
+python3 build_app_js.py   # app.js neu erzeugen
 python3 -m http.server 8080
-# http://localhost:8080
 ```
-
-## GitHub Pages
-
-Quellbranch `main`, Ordner `/` (Root).
