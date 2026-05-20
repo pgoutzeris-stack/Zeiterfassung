@@ -1274,158 +1274,43 @@ input, select, textarea { font-family: inherit; }
 
 /* ===== Auth Gate ===== */
 .auth-gate {
-  position: fixed;
-  inset: 0;
-  z-index: 5000;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  background: var(--app-bg);
-  padding: 24px;
-  overflow-y: auto;
+  position: fixed; inset: 0; z-index: 5000;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--app-bg); padding: 2rem 1rem; overflow-y: auto;
 }
 .auth-card {
-  background: var(--bg);
-  padding: 32px;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  width: 100%;
-  max-width: 440px;
-  border: 1px solid var(--line);
-  margin: auto;
+  background: var(--bg); border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0,0,0,.2);
+  width: 100%; max-width: 440px; padding: 3rem 2.5rem;
 }
-.auth-card h1 {
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-.auth-card p.sub {
-  font-size: 13px;
-  color: var(--muted);
-  margin-bottom: 24px;
-  line-height: 1.5;
-}
-.auth-tabs {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 20px;
-}
-.auth-tab-input {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-  margin: 0;
-  pointer-events: none;
-}
-.auth-tab-btn {
-  flex: 1;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid var(--line);
-  background: var(--status-bg);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--muted);
-  text-align: center;
-  cursor: pointer;
-  display: block;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-}
-#auth-tab-login:checked ~ .auth-tabs label[for="auth-tab-login"],
-#auth-tab-register:checked ~ .auth-tabs label[for="auth-tab-register"] {
-  background: var(--brand-light);
-  border-color: var(--brand);
-  color: var(--brand-dark);
-}
-#panel-login,
-#panel-register {
-  display: none;
-}
-#auth-tab-login:checked ~ #panel-login,
-#auth-tab-register:checked ~ #panel-register {
-  display: block;
-}
-.auth-field { margin-bottom: 14px; }
-.auth-field label {
-  display: block;
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 6px;
-}
-.auth-field input {
-  width: 100%;
-  height: 42px;
-  padding: 0 14px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  font-size: 14px;
-}
-.auth-field input:focus {
-  outline: none;
-  border-color: var(--brand);
-  box-shadow: 0 0 0 3px var(--brand-light);
-}
-#error-text { margin-top: 12px; color: var(--danger); font-size: 13px; min-height: 1.2em; }
-
-.auth-feedback {
-  margin-top: 14px;
-  font-size: 13px;
-  line-height: 1.5;
-  min-height: 0;
-  border-radius: 8px;
-  padding: 0;
-  display: block;
-}
-.auth-feedback:empty { display: none; }
-.auth-feedback--error {
-  color: var(--danger);
-  background: #fef2f2;
-  border: 1px solid #fca5a5;
-  border-left: 4px solid var(--danger);
-  padding: 10px 14px;
-  font-weight: 500;
-}
-.auth-feedback--success {
-  color: #065f46;
-  background: #ecfdf5;
-  border: 1px solid #6ee7b7;
-  border-left: 4px solid #10b981;
-  padding: 10px 14px;
-  font-weight: 500;
-}
-.auth-feedback--info {
-  color: #1e40af;
-  background: #eff6ff;
-  border: 1px solid #93c5fd;
-  border-left: 4px solid var(--brand);
-  padding: 10px 14px;
-}
-.auth-resend {
-  margin-top: 10px;
-  text-align: center;
-}
-.auth-resend[hidden] { display: none !important; }
-.btn-auth-resend {
-  background: none;
-  border: none;
-  padding: 0;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--brand);
-  cursor: pointer;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-.btn-auth-resend:hover { color: var(--brand-dark); }
-.btn-auth-resend:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
+.auth-logo-wrap { text-align: center; margin-bottom: 2rem; }
+.auth-logo-wrap img { height: 32px; }
+.auth-card-title { font-size: 1.5rem; font-weight: 700; text-align: center; margin-bottom: .4rem; color: var(--ink); }
+.auth-card-sub { font-size: .95rem; color: var(--muted); text-align: center; margin-bottom: 2rem; }
+.auth-form-group { margin-bottom: 1.25rem; }
+.auth-form-group label { display: block; font-size: .875rem; font-weight: 500; color: var(--muted); margin-bottom: .4rem; }
+.auth-input-wrap { position: relative; }
+.auth-input-wrap .auth-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: .875rem; pointer-events: none; }
+.auth-input-wrap input { width: 100%; height: 44px; padding: 0 12px 0 38px; border: 1px solid var(--line); border-radius: 8px; font-family: inherit; font-size: .95rem; color: var(--ink); background: var(--bg); outline: none; transition: border-color .2s, box-shadow .2s; }
+.auth-input-wrap input:focus { border-color: var(--brand); box-shadow: var(--shadow-focus); }
+.auth-forgot-row { display: flex; justify-content: flex-end; margin-top: -.5rem; margin-bottom: 1.5rem; }
+.auth-link { font-size: .85rem; color: var(--brand); text-decoration: none; background: none; border: none; cursor: pointer; font-family: inherit; padding: 0; }
+.auth-link:hover { color: var(--brand-dark); text-decoration: underline; }
+.auth-btn-submit { display: flex; align-items: center; justify-content: center; gap: .5rem; width: 100%; padding: .8rem 1.6rem; background: var(--brand); color: #fff; border: none; border-radius: 999px; font-family: inherit; font-size: 1rem; font-weight: 500; cursor: pointer; box-shadow: var(--shadow); transition: all .3s; margin-top: .25rem; }
+.auth-btn-submit:hover { background: var(--brand-dark); transform: translateY(-2px); }
+.auth-btn-submit:disabled { background: var(--disabled-bg, #cbd5e1); color: var(--disabled-text, #64748b); box-shadow: none; transform: none; cursor: not-allowed; }
+.auth-feedback { border-radius: 8px; padding: .85rem 1rem; font-size: .9rem; color: var(--ink); margin-top: 1rem; min-height: 0; }
+.auth-feedback.error { background: var(--status-bg); border-left: 4px solid var(--ink); }
+.auth-feedback.success { background: var(--brand-light); border-left: 4px solid var(--brand); color: var(--brand-dark); }
+.auth-resend { text-align: center; margin-top: 1rem; }
+.btn-auth-resend { font-size: .85rem; color: var(--brand); background: none; border: none; cursor: pointer; font-family: inherit; padding: 0; }
+.btn-auth-resend:hover { color: var(--brand-dark); text-decoration: underline; }
+.auth-card-footer { margin-top: 1.75rem; text-align: center; font-size: .85rem; color: var(--muted); }
+.auth-toggle-link { display: inline-block; margin-top: .5rem; font-size: .85rem; color: var(--brand); background: none; border: none; cursor: pointer; font-family: inherit; padding: 0; }
+.auth-toggle-link:hover { color: var(--brand-dark); text-decoration: underline; }
+#panel-register { display: none; }
+#panel-register.active { display: block; }
+#panel-login.active { display: block; }
 
 .app-version-badge {
   position: fixed;
@@ -1451,33 +1336,67 @@ input, select, textarea { font-family: inherit; }
 <div id="appVersionBadge" class="app-version-badge">v3</div>
 <div id="authGate" class="auth-gate">
   <div class="auth-card">
-    <h1>ROOTS <span style="color:var(--brand)">TIME</span></h1>
-    <p class="sub">Anmeldung nur mit <strong>@roots-consultants.com</strong>. Daten werden live mit Supabase synchronisiert.</p>
-    <input type="radio" name="auth-tab" id="auth-tab-login" class="auth-tab-input" checked>
-    <input type="radio" name="auth-tab" id="auth-tab-register" class="auth-tab-input">
-    <div class="auth-tabs">
-      <label for="auth-tab-login" class="auth-tab-btn">Anmelden</label>
-      <label for="auth-tab-register" class="auth-tab-btn">Registrieren</label>
+    <div class="auth-logo-wrap">
+      <img src="https://roots-consultants.de/wp-content/uploads/2025/04/Roots-Brand-Strategy-Consultants-Logo.svg" alt="ROOTS" />
     </div>
-    <div id="panel-login" class="auth-panel">
-      <form id="formLogin">
-        <div class="auth-field"><label>E-Mail</label>
-          <input id="authEmail" type="email" autocomplete="username" required placeholder="name@roots-consultants.com"></div>
-        <div class="auth-field"><label>Passwort</label>
-          <input id="authPassword" type="password" autocomplete="current-password" required></div>
-        <button type="submit" class="btn-primary" style="width:100%; justify-content:center; margin-top:8px;">Anmelden</button>
+    <div id="panel-login" class="active">
+      <h1 class="auth-card-title">Willkommen zurück</h1>
+      <p class="auth-card-sub">Melde dich bei deinem ROOTS TIME-Konto an.</p>
+      <form id="formLogin" novalidate>
+        <div class="auth-form-group">
+          <label for="authEmail">E-Mail-Adresse</label>
+          <div class="auth-input-wrap">
+            <i class="fa-regular fa-envelope auth-icon"></i>
+            <input type="email" id="authEmail" placeholder="name@roots-consultants.com" autocomplete="email" required />
+          </div>
+        </div>
+        <div class="auth-form-group">
+          <label for="authPassword">Passwort</label>
+          <div class="auth-input-wrap">
+            <i class="fa-solid fa-lock auth-icon"></i>
+            <input type="password" id="authPassword" placeholder="••••••••" autocomplete="current-password" required />
+          </div>
+        </div>
+        <button type="submit" class="auth-btn-submit">
+          <i class="fa-solid fa-arrow-right-to-bracket"></i> Anmelden
+        </button>
       </form>
+      <div class="auth-card-footer">
+        Noch kein Konto?&nbsp;<button type="button" class="auth-toggle-link" id="authShowRegister">Registrieren</button>
+      </div>
     </div>
-    <div id="panel-register" class="auth-panel">
-      <form id="formRegister">
-        <div class="auth-field"><label>Vollständiger Name</label>
-          <input id="regName" type="text" required placeholder="Max Mustermann"></div>
-        <div class="auth-field"><label>E-Mail</label>
-          <input id="regEmail" type="email" autocomplete="email" required placeholder="name@roots-consultants.com"></div>
-        <div class="auth-field"><label>Passwort (min. 8 Zeichen)</label>
-          <input id="regPassword" type="password" autocomplete="new-password" required minlength="8"></div>
-        <button type="submit" class="btn-primary" style="width:100%; justify-content:center; margin-top:8px;">Konto anlegen</button>
+    <div id="panel-register">
+      <h1 class="auth-card-title">Konto erstellen</h1>
+      <p class="auth-card-sub">Registrierung nur mit <strong>@roots-consultants.com</strong>.</p>
+      <form id="formRegister" novalidate>
+        <div class="auth-form-group">
+          <label for="regName">Vollständiger Name</label>
+          <div class="auth-input-wrap">
+            <i class="fa-solid fa-user auth-icon"></i>
+            <input type="text" id="regName" placeholder="Max Mustermann" required />
+          </div>
+        </div>
+        <div class="auth-form-group">
+          <label for="regEmail">E-Mail-Adresse</label>
+          <div class="auth-input-wrap">
+            <i class="fa-regular fa-envelope auth-icon"></i>
+            <input type="email" id="regEmail" placeholder="name@roots-consultants.com" autocomplete="email" required />
+          </div>
+        </div>
+        <div class="auth-form-group">
+          <label for="regPassword">Passwort (min. 8 Zeichen)</label>
+          <div class="auth-input-wrap">
+            <i class="fa-solid fa-lock auth-icon"></i>
+            <input type="password" id="regPassword" placeholder="••••••••" autocomplete="new-password" required minlength="8" />
+          </div>
+        </div>
+        <button type="submit" class="auth-btn-submit">
+          <i class="fa-solid fa-user-plus"></i> Konto anlegen
+        </button>
       </form>
+      <div class="auth-card-footer">
+        Bereits registriert?&nbsp;<button type="button" class="auth-toggle-link" id="authShowLogin">Anmelden</button>
+      </div>
     </div>
     <div id="authFeedback" class="auth-feedback" role="status" aria-live="polite"></div>
     <div id="authResendRow" class="auth-resend" hidden>
@@ -1917,5 +1836,15 @@ input, select, textarea { font-family: inherit; }
 <div id="toast-container"></div>
 
 <script src="app.js?v=3"></script>
+<script>
+document.getElementById('authShowRegister')?.addEventListener('click', () => {
+  document.getElementById('panel-login').classList.remove('active');
+  document.getElementById('panel-register').classList.add('active');
+});
+document.getElementById('authShowLogin')?.addEventListener('click', () => {
+  document.getElementById('panel-register').classList.remove('active');
+  document.getElementById('panel-login').classList.add('active');
+});
+</script>
 </body>
 </html>
