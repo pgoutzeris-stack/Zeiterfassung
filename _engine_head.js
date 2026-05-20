@@ -241,11 +241,22 @@ function subscribeWorkspaceRealtime() {
     .subscribe();
 }
 
+function resetAuthSubmitButtons() {
+  document.querySelectorAll("#authGate form button[type='submit']").forEach((btn) => {
+    btn.disabled = false;
+    if (btn.dataset.prevLabel) {
+      btn.textContent = btn.dataset.prevLabel;
+      delete btn.dataset.prevLabel;
+    }
+  });
+}
+
 function showAuthGate(show) {
   const g = document.getElementById("authGate");
   const app = document.getElementById("mainApp");
   if (g) g.style.display = show ? "flex" : "none";
   if (app) app.style.display = show ? "none" : "";
+  if (show) resetAuthSubmitButtons();
 }
 
 /** Redirect nach E-Mail-Link (Supabase Dashboard: „Redirect URLs“ muss diese URL erlauben) */
@@ -510,7 +521,6 @@ async function handleSignOut() {
 function wireAuthForms() {
   document.getElementById("formLogin")?.addEventListener("submit", handleSignIn);
   document.getElementById("formRegister")?.addEventListener("submit", handleSignUp);
-  document.getElementById("btnLogout")?.addEventListener("click", () => void handleSignOut());
   document.getElementById("authResendBtn")?.addEventListener("click", () => void handleResendConfirmation());
 }
 
