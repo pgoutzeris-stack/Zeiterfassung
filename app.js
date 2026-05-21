@@ -70,6 +70,7 @@ function initSupabaseClient() {
   supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
   });
+  window.__rootsSupabaseClient = supabase;
 }
 
 function setSyncUi(ok) {
