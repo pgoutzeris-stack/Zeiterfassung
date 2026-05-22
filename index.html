@@ -1456,13 +1456,8 @@ input, select, textarea { font-family: inherit; }
         <button title="Timer stoppen" id="stopTimerBtn"><i class="fa-solid fa-stop"></i></button>
       </div>
 
-      <div class="sync-badge" id="syncBadge">
-        <span class="dot"></span>
-        <span id="syncLabel">Offline-Modus</span>
-      </div>
+      <div id="roots-sync-status" class="roots-sync-wrap" aria-live="polite"></div>
 
-      <div id="roots-header-avatar" style="cursor:pointer" title="Profil öffnen"></div>
-      <span id="roots-header-name" style="font-size:13px;color:var(--muted);cursor:pointer;white-space:nowrap;max-width:120px;overflow:hidden;text-overflow:ellipsis"></span>
       <button class="btn-primary" id="newProjectBtn">
         <i class="fa-solid fa-plus"></i> Neues Projekt
       </button>
