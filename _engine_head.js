@@ -181,19 +181,9 @@ async function loadWorkspaceData() {
   }
   state.entries = entries.map(mapEntry);
 
-  const { data: memberRows, error: me } = await supabase
-    .from("workspace_members")
-    .select("user_id")
-    .eq("workspace_id", WORKSPACE_ID);
-  if (me) throw me;
-  const userIds = [...new Set((memberRows || []).map((m) => m.user_id))];
-  let members = [];
-  if (userIds.length) {
-    const { data: prs, error: pre } = await supabase.from("profiles").select("*").in("id", userIds);
-    if (pre) throw pre;
-    members = (prs || []).map(mapMemberProfile);
-  }
-  state.members = members;
+  const { data: prs, error: pre } = await supabase.from("profiles").select("*");
+  if (pre) throw pre;
+  state.members = (prs || []).map(mapMemberProfile);
 
   const rawTimer = localStorage.getItem(TIMER_KEY);
   if (rawTimer) {
@@ -496,7 +486,7 @@ async function handleSignUp(e) {
     if (loginRadio) loginRadio.checked = true;
     if (registerRadio) registerRadio.checked = false;
     showAuthFeedback(
-      "Konto angelegt! Bitte jetzt im Tab „Anmelden" einloggen.",
+      "Konto angelegt! Bitte jetzt im Tab „Anmelden“ einloggen.",
       "success"
     );
     setResendVisible(null);

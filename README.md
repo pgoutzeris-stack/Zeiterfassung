@@ -18,9 +18,9 @@ Interne Zeiterfassung für **ROOTS Consultants** mit **Supabase Auth** (nur `@ro
 
 ### Datenbank (ROOTS_Intranet_DB)
 
-Tabellen: `workspaces`, `profiles`, `workspace_members`, `categories`, `projects`, `tasks`, `time_entries` – alle mit **RLS** (außer ältere Kalender-Tabellen).
+Tabellen: `profiles`, `categories`, `projects`, `tasks`, `time_entries` – alle mit **RLS** (außer ältere Kalender-Tabellen).
 
-Neue Nutzer: Trigger `handle_new_user` prüft Domain und legt `profiles` + `workspace_members` für Workspace `ROOTS Consultants` an.
+Neue Nutzer: Trigger `handle_new_user` prüft Domain und legt `profiles` an.
 
 ### Sicherheit
 
