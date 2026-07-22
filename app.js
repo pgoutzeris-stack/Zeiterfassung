@@ -9,7 +9,6 @@ const TIMER_KEY = "roots_time_active_timer_v2";
 const CFG = (typeof window !== "undefined" && window.ROOTS_TIME_CONFIG) ? window.ROOTS_TIME_CONFIG : {};
 const SUPABASE_URL = CFG.SUPABASE_URL || "";
 const SUPABASE_ANON_KEY = CFG.SUPABASE_ANON_KEY || "";
-let supabase = null;
 let sessionUser = null;
 let workspaceChannel = null;
 let reloadDebounce = null;
