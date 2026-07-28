@@ -67,8 +67,13 @@ function initSupabaseClient() {
       "supabase-js nicht geladen. CDN-Skript wurde blockiert oder ist noch nicht verfügbar."
     );
   }
+  const embedded = window.parent !== window;
   supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
+    auth: {
+      persistSession: !embedded,
+      autoRefreshToken: !embedded,
+      detectSessionInUrl: !embedded,
+    },
   });
   window.__rootsSupabaseClient = supabase;
 }
