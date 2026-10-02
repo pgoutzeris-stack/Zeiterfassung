@@ -58,7 +58,7 @@ function isAllowedEmail(email) {
 
 function initSupabaseClient() {
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-    console.error("[ROOTS TIME] Supabase-URL oder Anon-Key fehlt – config.js prüfen.");
+    console.error("[ROOTS TIME] Supabase-URL oder Anon-Key fehlt - config.js prüfen.");
     return;
   }
   if (typeof window.supabase === "undefined" || typeof window.supabase.createClient !== "function") {
@@ -592,7 +592,7 @@ async function boot() {
   if (!supabase) {
     setSyncUi(false);
     showAuthFeedback(
-      "Supabase nicht konfiguriert – config.js prüfen (SUPABASE_URL / ANON_KEY).",
+      "Supabase nicht konfiguriert - config.js prüfen (SUPABASE_URL / ANON_KEY).",
       "error"
     );
     console.error("[ROOTS TIME] Kein Supabase-Client.");
@@ -841,7 +841,7 @@ function renderProjectDetail() {
       <span class="detail-color" style="background:${p.color}"></span>
       <div class="detail-title-block">
         <div class="detail-title">${escapeHtml(p.name)}</div>
-        <div class="detail-subtitle">${cat ? escapeHtml(cat.name) + ' · ' : ''}${p.startDate || '—'} bis ${p.dueDate || '—'}${p.billable ? ' · ' + (p.hourlyRate || 0) + ' €/h' : ' · nicht abrechenbar'}</div>
+        <div class="detail-subtitle">${cat ? escapeHtml(cat.name) + ' · ' : ''}${p.startDate || '-'} bis ${p.dueDate || '-'}${p.billable ? ' · ' + (p.hourlyRate || 0) + ' €/h' : ' · nicht abrechenbar'}</div>
       </div>
       <div class="detail-actions">
         <button class="icon-btn" onclick="openProjectModal('${p.id}')" title="Bearbeiten"><i class="fa-solid fa-pen"></i></button>
@@ -852,9 +852,9 @@ function renderProjectDetail() {
 
     <div class="metric-grid">
       <div class="metric"><div class="metric-label">Erfasst</div><div class="metric-value">${fmtHM(totalSec)}</div></div>
-      <div class="metric"><div class="metric-label">Geplant</div><div class="metric-value">${plannedSec ? fmtHM(plannedSec) : '—'}</div></div>
-      <div class="metric brand"><div class="metric-label">Fortschritt</div><div class="metric-value">${plannedSec ? Math.round(pct) + ' %' : '—'}</div></div>
-      <div class="metric"><div class="metric-label">Umsatz</div><div class="metric-value">${revenue > 0 ? Math.round(revenue) + ' €' : '—'}</div></div>
+      <div class="metric"><div class="metric-label">Geplant</div><div class="metric-value">${plannedSec ? fmtHM(plannedSec) : '-'}</div></div>
+      <div class="metric brand"><div class="metric-label">Fortschritt</div><div class="metric-value">${plannedSec ? Math.round(pct) + ' %' : '-'}</div></div>
+      <div class="metric"><div class="metric-label">Umsatz</div><div class="metric-value">${revenue > 0 ? Math.round(revenue) + ' €' : '-'}</div></div>
     </div>
 
     ${plannedSec ? `<div class="progress-bar-wrap"><div class="bar" style="width:${pct}%"></div></div>` : ''}
@@ -874,7 +874,7 @@ function renderProjectDetail() {
       const dateStr = d.toLocaleDateString('de-DE', { day:'2-digit', month:'short' });
       html += `<div class="entry-row">
         <span class="entry-date">${dateStr}</span>
-        <span class="entry-task">${task ? escapeHtml(task.name) : '—'}${e.note ? ' · ' + escapeHtml(e.note) : ''}</span>
+        <span class="entry-task">${task ? escapeHtml(task.name) : '-'}${e.note ? ' · ' + escapeHtml(e.note) : ''}</span>
         <span class="entry-duration">${fmtHM(entryDuration(e))}</span>
         <span class="entry-name">${escapeHtml(e.userName || '')}</span>
         <button class="icon-btn danger" onclick="deleteEntry('${e.id}')" title="Löschen"><i class="fa-solid fa-xmark"></i></button>
@@ -912,7 +912,7 @@ function stopTimer(showToast=true) {
   const duration = Math.floor((Date.now() - startMs) / 1000);
 
   if (duration < 5) {
-    // zu kurz – verwerfen
+    // zu kurz - verwerfen
     state.activeTimer = null;
     saveLocal();
     updateRunningPill();
@@ -1033,7 +1033,7 @@ function openProjectModal(pid=null) {
       <div class="form-row">
         <label class="modern-label">Kategorie</label>
         <select class="modern-select" id="pmCategory">
-          <option value="">— ohne Kategorie —</option>
+          <option value="">- ohne Kategorie -</option>
           ${cats}
         </select>
         <button type="button" class="btn-secondary" style="margin-top:8px; font-size: 12px; padding: 6px 12px;" onclick="quickAddCategory()">
@@ -1272,7 +1272,7 @@ function renderToday() {
       const start = new Date(e.startTime).toLocaleTimeString('de-DE', { hour:'2-digit', minute:'2-digit' });
       return `<div class="entry-row" style="grid-template-columns: 80px 1fr 80px 32px;">
         <span class="entry-date">${start}</span>
-        <span class="entry-task"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${p?p.color:'#94a3b8'};margin-right:6px;"></span>${t ? escapeHtml(t.name) : '—'}${e.note ? ' · ' + escapeHtml(e.note) : ''}</span>
+        <span class="entry-task"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${p?p.color:'#94a3b8'};margin-right:6px;"></span>${t ? escapeHtml(t.name) : '-'}${e.note ? ' · ' + escapeHtml(e.note) : ''}</span>
         <span class="entry-duration">${fmtHM(entryDuration(e))}</span>
         <button class="icon-btn danger" onclick="deleteEntry('${e.id}')" title="Löschen"><i class="fa-solid fa-xmark"></i></button>
       </div>`;
@@ -1389,7 +1389,7 @@ function renderCalDay(date, isOther) {
   dayEntries.slice(0, 3).forEach(e => {
     const t = state.tasks.find(x => x.id === e.taskId);
     const p = t ? state.projects.find(x => x.id === t.projectId) : null;
-    html += `<span class="cal-entry-chip" style="background:${p ? p.color : '#94a3b8'}">${t ? escapeHtml(t.name) : '—'}</span>`;
+    html += `<span class="cal-entry-chip" style="background:${p ? p.color : '#94a3b8'}">${t ? escapeHtml(t.name) : '-'}</span>`;
   });
   if (dayEntries.length > 3) html += `<span style="font-size:10px;color:var(--muted)">+${dayEntries.length - 3} weitere</span>`;
   html += `</div></div>`;
@@ -2011,7 +2011,7 @@ function openMemberModal(mid = null) {
   toast(
     "Neue Kolleg:innen melden sich mit @" +
       ALLOWED_EMAIL_DOMAIN +
-      " an – sie erscheinen automatisch im Team.",
+      " an - sie erscheinen automatisch im Team.",
     "info"
   );
 }
@@ -2031,7 +2031,7 @@ document.getElementById("importJsonFile").onchange = (e) => {
   const file = e.target.files[0];
   e.target.value = "";
   if (!file) return;
-  toast("JSON-Import ist deaktiviert – Daten kommen aus der gemeinsamen Supabase-Datenbank.", "info");
+  toast("JSON-Import ist deaktiviert - Daten kommen aus der gemeinsamen Supabase-Datenbank.", "info");
 };
 
 document.getElementById("resetDataBtn").onclick = () => {

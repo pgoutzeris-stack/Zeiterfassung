@@ -1,5 +1,5 @@
 /**
- * ROOTS TIME – public browser configuration.
+ * ROOTS TIME - public browser configuration.
  *
  * The publishable/anon key identifies the Supabase project; authorization is
  * enforced by Auth and RLS. Never place a service-role or secret key here.

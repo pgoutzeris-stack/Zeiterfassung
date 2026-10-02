@@ -59,7 +59,7 @@ function isAllowedEmail(email) {
 
 function initSupabaseClient() {
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-    console.error("[ROOTS TIME] Supabase-URL oder Anon-Key fehlt – config.js prüfen.");
+    console.error("[ROOTS TIME] Supabase-URL oder Anon-Key fehlt - config.js prüfen.");
     return;
   }
   if (typeof window.supabase === "undefined" || typeof window.supabase.createClient !== "function") {
@@ -593,7 +593,7 @@ async function boot() {
   if (!supabase) {
     setSyncUi(false);
     showAuthFeedback(
-      "Supabase nicht konfiguriert – config.js prüfen (SUPABASE_URL / ANON_KEY).",
+      "Supabase nicht konfiguriert - config.js prüfen (SUPABASE_URL / ANON_KEY).",
       "error"
     );
     console.error("[ROOTS TIME] Kein Supabase-Client.");

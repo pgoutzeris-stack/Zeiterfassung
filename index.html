@@ -1365,7 +1365,7 @@ input, select, textarea { font-family: inherit; }
     </div>
     <div id="panel-forgot">
       <h2 style="font-size:1.5rem;font-weight:700;text-align:center;margin-bottom:.4rem;color:var(--ink)">Passwort zurücksetzen</h2>
-      <p style="font-size:.95rem;color:var(--muted);text-align:center;margin-bottom:2rem">Gib deine E-Mail ein – wir schicken dir einen Link.</p>
+      <p style="font-size:.95rem;color:var(--muted);text-align:center;margin-bottom:2rem">Gib deine E-Mail ein - wir schicken dir einen Link.</p>
       <div id="forgotError" style="display:none;background:var(--status-bg);border-left:4px solid var(--ink);border-radius:8px;padding:.85rem 1rem;font-size:.9rem;margin-bottom:1.25rem;align-items:flex-start;gap:.6rem"><i class="fa-solid fa-circle-exclamation"></i><span id="forgotErrorText"></span></div>
       <div id="forgotSuccess" style="display:none;background:var(--brand-light);border-left:4px solid var(--brand);color:var(--brand-dark);border-radius:8px;padding:.85rem 1rem;font-size:.9rem;margin-bottom:1.25rem;align-items:flex-start;gap:.6rem"><i class="fa-solid fa-circle-check"></i><span>E-Mail versendet! Bitte prüfe deinen Posteingang.</span></div>
       <form id="formForgot" novalidate>
@@ -1534,7 +1534,7 @@ input, select, textarea { font-family: inherit; }
       <div class="view-header">
         <div>
           <h2 class="view-title">Heute</h2>
-          <div class="view-subtitle" id="todayDate">—</div>
+          <div class="view-subtitle" id="todayDate">-</div>
         </div>
         <div class="view-actions">
           <button class="btn-secondary" id="manualEntryBtn">
@@ -1599,7 +1599,7 @@ input, select, textarea { font-family: inherit; }
         </div>
         <div class="view-actions">
           <button class="cal-nav-btn" id="calPrev"><i class="fa-solid fa-chevron-left"></i></button>
-          <div class="cal-period" id="calPeriod">—</div>
+          <div class="cal-period" id="calPeriod">-</div>
           <button class="cal-nav-btn" id="calNext"><i class="fa-solid fa-chevron-right"></i></button>
           <button class="btn-secondary" id="calToday">Heute</button>
         </div>
@@ -1647,7 +1647,7 @@ input, select, textarea { font-family: inherit; }
           <div class="stat-card">
             <div class="stat-label">Stunden gesamt</div>
             <div class="stat-value" id="statTotal">0:00</div>
-            <div class="stat-trend up"><i class="fa-solid fa-arrow-up"></i> <span id="statTotalTrend">—</span></div>
+            <div class="stat-trend up"><i class="fa-solid fa-arrow-up"></i> <span id="statTotalTrend">-</span></div>
           </div>
           <div class="stat-card">
             <div class="stat-label">Ø pro Tag</div>
@@ -2102,7 +2102,7 @@ window.RootsUser = window.RootsUser || {
     const btn=document.getElementById('rus-save');
     const msg=document.getElementById('rus-msg');
     const showMsg=(text,ok)=>{if(!msg)return;msg.style.cssText='display:block;font-size:.85rem;text-align:center;margin-top:.5rem;padding:.5rem;border-radius:8px;background:'+(ok?'#ecfdf5':'#fef2f2')+';color:'+(ok?'#10b981':'#dc2626');msg.textContent=text;};
-    if(!this._sb||!this._uid){showMsg('Nicht angemeldet — bitte neu einloggen',false);return;}
+    if(!this._sb||!this._uid){showMsg('Nicht angemeldet - bitte neu einloggen',false);return;}
     const orig=btn?btn.innerHTML:'';
     if(btn){btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-circle-notch fa-spin"></i> Speichern…';}
     if(msg)msg.style.display='none';
@@ -2129,7 +2129,7 @@ window.RootsUser = window.RootsUser || {
 };
 // For Zeiterfassung: hook into the existing supabase client once it's available
 document.addEventListener('DOMContentLoaded', () => {
-  // app.js initializes `supabase` — wait for it then load user profile
+  // app.js initializes `supabase` - wait for it then load user profile
   const poll = setInterval(() => {
     if (window.supabase && window.supabase.auth) {
       clearInterval(poll);

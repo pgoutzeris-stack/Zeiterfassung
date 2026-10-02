@@ -25,7 +25,7 @@ document.getElementById("importJsonFile").onchange = (e) => {
   const file = e.target.files[0];
   e.target.value = "";
   if (!file) return;
-  toast("JSON-Import ist deaktiviert – Daten kommen aus der gemeinsamen Supabase-Datenbank.", "info");
+  toast("JSON-Import ist deaktiviert - Daten kommen aus der gemeinsamen Supabase-Datenbank.", "info");
 };
 
 document.getElementById("resetDataBtn").onclick = () => {

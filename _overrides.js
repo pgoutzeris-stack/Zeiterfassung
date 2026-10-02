@@ -206,7 +206,7 @@ function openMemberModal(mid = null) {
   toast(
     "Neue Kolleg:innen melden sich mit @" +
       ALLOWED_EMAIL_DOMAIN +
-      " an – sie erscheinen automatisch im Team.",
+      " an - sie erscheinen automatisch im Team.",
     "info"
   );
 }
